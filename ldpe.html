@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LDPE | پلی‌اتیلن با چگالی پایین</title>
+<style>
+  :root{
+    --bg-0:#0a121c;
+    --bg-1:#0f1b28;
+    --panel:rgba(255,255,255,0.055);
+    --panel-strong:rgba(255,255,255,0.09);
+    --line:rgba(255,255,255,0.10);
+    --ink:#eef4f8;
+    --ink-dim:#9fb2c4;
+    --mono:'Consolas','SF Mono','Courier New',monospace;
+
+    --c-structure:#8fd694;
+    --c-process:#ffb648;
+    --c-thermal:#ff7a5c;
+    --c-mech:#7aa7ff;
+    --c-phys:#4fd1c5;
+    --c-chem:#8fd694;
+    --c-elec:#f4d35e;
+    --c-adv:#b98ee8;
+    --c-env:#6fcf97;
+    --c-app:#ff8f6b;
+    --c-id:#c7d6e5;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1200px 600px at 80% -10%, rgba(127,176,105,0.08), transparent 60%),
+      radial-gradient(1000px 500px at -10% 20%, rgba(122,167,255,0.07), transparent 55%),
+      linear-gradient(180deg,var(--bg-0),var(--bg-1) 40%, var(--bg-0));
+    color:var(--ink);
+    font-family:'Vazirmatn','IRANSans','Tahoma','Segoe UI',sans-serif;
+    line-height:1.9;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:0 16px 60px;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    min-height:92vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:40px 20px;
+    overflow:hidden;
+    border-bottom:1px solid var(--line);
+  }
+  .hero::before{
+    content:"";
+    position:absolute;inset:0;
+    background:
+      repeating-linear-gradient(90deg, rgba(143,214,148,0.05) 0 2px, transparent 2px 40px);
+    mask-image:linear-gradient(180deg, transparent, black 30%, black 70%, transparent);
+    pointer-events:none;
+  }
+  .eyebrow{
+    font-family:var(--mono);
+    letter-spacing:.15em;
+    color:var(--c-structure);
+    font-size:.8rem;
+    margin-bottom:18px;
+    opacity:.9;
+    z-index:1;
+  }
+  .hero h1{
+    font-size:clamp(2.1rem,8vw,3.4rem);
+    font-weight:800;
+    margin:0 0 6px;
+    z-index:1;
+    letter-spacing:-0.01em;
+  }
+  .hero .en-name{
+    font-family:var(--mono);
+    color:var(--ink-dim);
+    font-size:.95rem;
+    letter-spacing:.05em;
+    margin-bottom:34px;
+    z-index:1;
+  }
+  #chainCanvas{
+    width:100%;
+    max-width:520px;
+    height:120px;
+    z-index:1;
+    margin-bottom:28px;
+  }
+  .dyk{
+    z-index:1;
+    background:var(--panel-strong);
+    border:1px solid var(--line);
+    border-right:4px solid var(--c-structure);
+    border-radius:14px;
+    padding:18px 20px;
+    max-width:520px;
+    backdrop-filter:blur(8px);
+    text-align:right;
+    box-shadow:0 20px 40px -20px rgba(0,0,0,.6);
+  }
+  .dyk b{color:var(--c-structure);display:block;font-size:.78rem;letter-spacing:.08em;margin-bottom:6px;font-family:var(--mono);}
+  .scrollcue{
+    margin-top:34px;
+    color:var(--ink-dim);
+    font-size:1.4rem;
+    animation:bob 1.8s ease-in-out infinite;
+    z-index:1;
+  }
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);}}
+
+  /* ---------- SECTION HEADERS ---------- */
+  .section-title{
+    display:flex;align-items:center;gap:10px;
+    margin:52px 0 16px;
+    font-size:1.35rem;
+    font-weight:800;
+  }
+  .section-title .dot{width:10px;height:10px;border-radius:50%;flex:none;}
+  .section-lead{color:var(--ink-dim);font-size:.96rem;margin:-8px 0 18px;}
+
+  /* ---------- CARDS ---------- */
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:16px;
+    margin-bottom:14px;
+    overflow:hidden;
+    transition:border-color .2s ease;
+  }
+  .card-head{
+    width:100%;
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:16px 18px;
+    background:transparent;border:none;color:var(--ink);
+    font-family:inherit;font-size:1rem;font-weight:700;
+    cursor:pointer;text-align:right;
+  }
+  .card-head .htxt{display:flex;align-items:center;gap:10px;}
+  .chev{transition:transform .25s ease;color:var(--ink-dim);font-size:.85rem;}
+  .card.open .chev{transform:rotate(180deg);}
+  .card-body{
+    max-height:0;
+    opacity:0;
+    padding:0 18px;
+    transition:max-height .35s ease, opacity .25s ease, padding .35s ease;
+    color:var(--ink-dim);
+    font-size:.94rem;
+  }
+  .card.open .card-body{
+    max-height:1400px;
+    opacity:1;
+    padding:0 18px 18px;
+  }
+  .card-body p{margin:0 0 12px;}
+  .card-body p:last-child{margin-bottom:0;}
+
+  /* stat grid */
+  .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:6px 0 14px;}
+  .stat{
+    background:rgba(255,255,255,0.04);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:12px 12px;
+  }
+  .stat .k{font-size:.72rem;color:var(--ink-dim);margin-bottom:4px;}
+  .stat .v{font-family:var(--mono);font-size:1.02rem;color:var(--ink);font-weight:700;direction:ltr;text-align:right;}
+
+  /* identity chips */
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+  .chip{
+    font-family:var(--mono);font-size:.78rem;
+    background:rgba(255,255,255,0.06);
+    border:1px solid var(--line);
+    padding:6px 12px;border-radius:999px;color:var(--ink-dim);
+  }
+
+  /* rating pills for chemical resistance */
+  .grid2{display:grid;grid-template-columns:1fr;gap:10px;margin-top:6px;}
+  @media(min-width:560px){.grid2{grid-template-columns:1fr 1fr;}}
+  .res-row{
+    display:flex;justify-content:space-between;align-items:center;
+    background:rgba(255,255,255,0.04);
+    border:1px solid var(--line);border-radius:10px;
+    padding:10px 12px;font-size:.88rem;
+  }
+  .badge{font-size:.72rem;padding:3px 10px;border-radius:999px;font-weight:700;font-family:var(--mono);}
+  .b-excellent{background:rgba(143,214,148,.18);color:#a8e6ad;}
+  .b-good{background:rgba(122,167,255,.18);color:#a9c4ff;}
+  .b-fair{background:rgba(255,182,72,.18);color:#ffcf8a;}
+  .b-poor{background:rgba(255,122,92,.18);color:#ffab97;}
+
+  /* applications */
+  .app-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  .app-card{
+    background:rgba(255,255,255,.04);border:1px solid var(--line);
+    border-radius:12px;padding:14px 12px;text-align:center;
+  }
+  .app-card .ic{font-size:1.6rem;margin-bottom:8px;display:block;}
+  .app-card .t{font-size:.85rem;color:var(--ink-dim);}
+
+  /* ---------- SLIDER (signature interactive) ---------- */
+  .sim{
+    background:var(--panel-strong);
+    border:1px solid var(--line);
+    border-right:4px solid var(--c-structure);
+    border-radius:16px;
+    padding:20px;
+    margin:18px 0 30px;
+  }
+  .sim h3{margin:0 0 4px;font-size:1.05rem;}
+  .sim .sub{color:var(--ink-dim);font-size:.85rem;margin-bottom:16px;}
+  #branchSvg{width:100%;height:90px;display:block;margin-bottom:14px;}
+  input[type=range]{
+    width:100%;
+    -webkit-appearance:none;
+    height:6px;border-radius:999px;
+    background:linear-gradient(90deg,var(--c-structure),var(--c-mech));
+    margin:10px 0 18px;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    width:22px;height:22px;border-radius:50%;
+    background:#fff;border:3px solid var(--c-structure);
+    cursor:pointer;
+  }
+  input[type=range]::-moz-range-thumb{
+    width:22px;height:22px;border-radius:50%;
+    background:#fff;border:3px solid var(--c-structure);cursor:pointer;
+  }
+  .sim-readouts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+  .sim-readouts .stat .v{color:var(--c-structure);}
+  .sim-tags{display:flex;justify-content:space-between;margin-top:12px;font-size:.78rem;color:var(--ink-dim);}
+
+  /* ---------- QUIZ ---------- */
+  .quiz{
+    background:var(--panel-strong);
+    border:1px solid var(--line);
+    border-right:4px solid var(--c-elec);
+    border-radius:16px;
+    padding:20px;
+    margin:20px 0 40px;
+  }
+  .quiz h3{margin-top:0;}
+  .qitem{margin-bottom:22px;}
+  .qitem:last-child{margin-bottom:0;}
+  .qtext{font-weight:700;margin-bottom:10px;}
+  .opts{display:flex;flex-direction:column;gap:8px;}
+  .opt{
+    background:rgba(255,255,255,.05);
+    border:1px solid var(--line);
+    color:var(--ink);
+    padding:10px 14px;border-radius:10px;
+    font-family:inherit;font-size:.92rem;
+    text-align:right;cursor:pointer;
+    transition:background .15s;
+  }
+  .opt:hover{background:rgba(255,255,255,.09);}
+  .opt.correct{background:rgba(143,214,148,.22);border-color:var(--c-structure);}
+  .opt.wrong{background:rgba(255,122,92,.22);border-color:var(--c-thermal);}
+  .opt[disabled]{cursor:default;}
+  .qfeedback{font-size:.85rem;color:var(--ink-dim);margin-top:8px;min-height:1.2em;}
+  .qscore{font-family:var(--mono);font-size:.85rem;color:var(--c-elec);margin-top:6px;}
+
+  footer{
+    text-align:center;color:var(--ink-dim);font-size:.82rem;
+    padding:30px 0 10px;border-top:1px solid var(--line);margin-top:40px;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="eyebrow">🧪 دایرةالمعارف پلیمرها</div>
+  <h1>پلی‌اتیلن با چگالی پایین</h1>
+  <div class="en-name">LDPE — Low-Density Polyethylene</div>
+
+  <svg id="chainCanvas" viewBox="0 0 500 120"></svg>
+
+  <div class="dyk">
+    <b>💡 می‌دانستید؟</b>
+    در هر ۱۰۰۰ اتم کربنِ زنجیرِ LDPE، بین ۲۰ تا ۴۰ شاخه فرعی وجود دارد؛ همین معماریِ شاخه‌دار است که بلورینگی این پلیمر را نسبت به HDPE به شدت پایین می‌آورد و در عوض نرمی و انعطاف‌پذیری فوق‌العاده‌ای به آن می‌بخشد.
+  </div>
+  <div class="scrollcue">↓</div>
+</section>
+
+<div class="wrap">
+
+  <!-- ============ شناسنامه ============ -->
+  <div class="section-title"><span class="dot" style="background:var(--c-id)"></span>📋 شناسنامه پلیمر</div>
+  <div class="card open" data-cat="id">
+    <div class="card-body" style="max-height:none;opacity:1;padding:0 18px 18px;">
+      <p>پلی‌اتیلن با چگالی پایین (LDPE) یکی از مهم‌ترین و پرکاربردترین پلیمرهای ترموپلاستیک در جهان است؛ عضوی از خانواده بزرگ پلی‌اولفین‌ها و در رده پلیمرهای ترموپلاستیک نیمه‌بلوری. اولین بار در سال ۱۹۳۳ توسط شرکت Imperial Chemical Industries (ICI) بریتانیا به روش صنعتی تولید شد.</p>
+      <div class="chips">
+        <span class="chip">CAS: 9002-88-4</span>
+        <span class="chip">کد بازیافت ♻️ ۴</span>
+        <span class="chip">خانواده: پلی‌اولفین</span>
+        <span class="chip">سال کشف صنعتی: ۱۹۳۳</span>
+        <span class="chip">شرکت: ICI (بریتانیا)</span>
+      </div>
+      <p style="margin-top:14px;">نام‌های تجاری معروف: <b>Lupolen</b> (LyondellBasell)، <b>Alathon</b> (Dow)، <b>Lotrene</b> (QAPCO).</p>
+    </div>
+  </div>
+
+  <!-- ============ ساختار مولکولی ============ -->
+  <div class="section-title"><span class="dot" style="background:var(--c-structure)"></span>🧬 ساختار مولکولی و معماری زنجیر</div>
+  <div class="card" data-cat="structure">
+    <button class="card-head"><span class="htxt">🔗 مونومر، پیوندها و شاخه‌ها</span><span class="chev">▾</span></button>
+    <div class="card-body">
+      <p>مونومر سازنده LDPE اتیلن (C₂H₄) است و واحد تکرارشونده آن به صورت [CH₂–CH₂]ₙ نمایش داده می‌شود. ستون فقرات زنجیر از اتم‌های کربن sp³ تشکیل شده که با پیوندهای سیگما (σ) به هم متصل‌اند و یک زنجیر اشباع می‌سازند.</p>
+      <p>مهم‌ترین ویژگی ساختاری LDPE، معماری به‌شدت شاخه‌دار آن است: شاخه‌های کوتاه (گروه‌های اتیل، بوتیل و آمیل) و شاخه‌های بلند که طولی مشابه زنجیر اصلی دارند. تراکم شاخه‌ها بین ۲۰ تا ۴۰ شاخه در هر ۱۰۰۰ اتم کربن است.</p>
+      <div class="stats">
+        <div class="stat"><div class="k">تراکم شاخه‌ها</div><div class="v">۲۰–۴۰ /۱۰۰۰C</div></div>
+        <div class="stat"><div class="k">بلورینگی LDPE</div><div class="v">۴۰–۵۵٪</div></div>
+        <div class="stat"><div class="k">بلورینگی HDPE (مقایسه)</div><div class="v">۶۰–۸۰٪</div></div>
+        <div class="stat"><div class="k">افت چگالی</div><div class="v">۰.۹۵ → ۰.۹۲ g/cm³</div></div>
+      </div>
+      <p>این شاخه‌ها انعطاف‌پذیری و نرمی پلیمر را به‌طور قابل توجهی افزایش می‌دهند و استحکام مذاب را بالا می‌برند؛ ویژگی‌ای که برای فرآیندهایی مانند تولید فیلم دمشی حیاتی است.</p>
+    </div>
+  </div>
+
+  <!-- SIGNATURE INTERACTIVE SLIDER -->
+  <div class="sim">
+    <h3>🎛️ شبیه‌سازی: شاخه‌دار بودن و چگالی</h3>
+    <div class="sub">لغزنده را جابه‌جا کنید تا ببینید تغییر چگالی چطور با تراکم شاخه‌ها و بلورینگی LDPE هم‌بسته است.</div>
+    <svg id="branchSvg" viewBox="0 0 500 90"></svg>
+    <input type="range" id="densitySlider" min="910" max="925" step="1" value="917">
+    <div class="sim-readouts">
+      <div class="stat"><div class="k">چگالی</div><div class="v" id="outDensity">۰٫۹۱۷</div></div>
+      <div class="stat"><div class="k">بلورینگی تخمینی</div><div class="v" id="outCryst">٪۴۷</div></div>
+      <div class="stat"><div class="k">شاخه در ۱۰۰۰C</div><div class="v" id="outBranch">۳۰</div></div>
+    </div>
+    <div class="sim-tags">
+      <span>◀ شاخه‌دارتر، نرم‌تر، بلورینگی کمتر</span>
+      <span>منظم‌تر، سفت‌تر، بلورینگی بیشتر ▶</span>
+    </div>
+  </div>
+
+  <!-- ============ سنتز ============ -->
+  <div class="section-title"><span class="dot" style="background:var(--c-process)"></span>⚗️ سنتز و پلیمریزاسیون</div>
+  <div class="card" data-cat="process">
+    <button class="card-head"><span class="htxt">🔥 شرایط واکنش و راکتورها</span><span class="chev">▾</span></button>
+    <div class="card-body">
+      <p>پلیمریزاسیون LDPE از طریق مکانیزم رادیکال آزاد و در شرایط سخت انجام می‌شود: فشار بین ۱۰۰۰ تا ۳۰۰۰ بار و دمای ۲۰۰ تا ۳۰۰ درجه سانتی‌گراد. آغازگرها معمولاً پراکسیدهای آلی هستند؛ اکسیژن نیز در مقادیر کم می‌تواند نقش آغازگر ایفا کند.</p>
+      <div class="stats">
+        <div class="stat"><div class="k">فشار واکنش</div><div class="v">۱۰۰۰–۳۰۰۰ بار</div></div>
+        <div class="stat"><div class="k">دمای واکنش</div><div class="v">۲۰۰–۳۰۰ °C</div></div>
+        <div class="stat"><div class="k">درجه پلیمریزاسیون</div><div class="v">۱۵۰۰–۱۵۰۰۰</div></div>
+        <div class="stat"><div class="k">جرم مولی مونومر</div><div class="v">۲۸ g/mol</div></div>
+      </div>
+      <p>دو نوع راکتور اصلی در صنعت استفاده می‌شود: راکتور <b>لوله‌ای</b> با بازده بالاتر و توزیع وزن مولکولی باریک‌تر، و راکتور <b>اتوکلاو</b> با کنترل بهتر بر تشکیل شاخه‌های بلند. وقوع مکرر واکنش‌های انتقال زنجیر عامل اصلی ایجاد شاخه‌های زیاد است.</p>
+    </div>
+  </div>
+
+  <!-- ============ وزن مولکولی ============ -->
+  <div class="section-title"><span class="dot" style="background:var(--c-mech)"></span>📊 ویژگی‌های وزن مولکولی</div>
+  <div class="card" data-cat="mech">
+    <button class="card-head"><span class="htxt">⚖️ Mw، Mn و توزیع</span><span class="chev">▾</span></button>
+    <div class="card-body">
+      <div class="stats">
+        <div class="stat"><div class="k">وزن مولکولی وزنی (Mw)</div><div class="v">۱۰۰,۰۰۰–۳۰۰,۰۰۰ g/mol</div></div>
+        <div class="stat"><div class="k">وزن مولکولی عددی (Mn)</div><div class="v">۲۰,۰۰۰–۸۰,۰۰۰ g/mol</div></div>
+        <div class="stat"><div class="k">شاخص چندپخشی (PDI)</div><div class="v">۳–۱۲</div></div>
+        <div class="stat"><div class="k">وزن درهم‌تنیدگی (Me)</div><div class="v">≈۱۳۰۰ g/mol</div></div>
+      </div>
+      <p>شاخص چندپخشی نسبتاً گسترده (۳ تا ۱۲) نشان‌دهنده توزیع پهن وزن مولکولی است. شعاع ژیراسیون زنجیرها بسته به وزن مولکولی بین ۲۰ تا ۴۰ نانومتر است.</p>
+    </div>
+  </div>
+
+  <!-- ============ مورفولوژی ============ -->
+  <div class="section-title"><span class="dot" style="background:var(--c-structure)"></span>🏗️ مورفولوژی و بلورینگی</div>
+  <div class="card" data-cat="structure">
+    <button class="card-head"><span class="htxt">🧊 سلول واحد و بلورها</span><span class="chev">▾</span></button>
+    <div class="card-body">
+      <p>LDPE پلیمری نیمه‌بلوری با ساختار بلوری ارتورومبیک است. پارامترهای سلول واحد: a = ۷.۴ Å، b = ۴.۹۳ Å، c (محور فیبر) = ۲.۵۵ Å.</p>
+      <div class="stats">
+        <div class="stat"><div class="k">درصد بلورینگی</div><div class="v">۴۰–۵۵٪</div></div>
+        <div class="stat"><div class="k">ضخامت لاملا</div><div class="v">۱۰–۲۰ nm</div></div>
+        <div class="stat"><div class="k">اندازه اسفرولیت</div><div class="v">۱۰–۵۰ μm</div></div>
+        <div class="stat"><div class="k">علت بلورینگی کمتر</div><div class="v" style="font-size:.82rem;">اختلال شاخه‌ها</div></div>
+      </div>
+      <p>وجود شاخه‌ها فرآیند تاخوردگی زنجیرها در لاملاها را مختل کرده و نظم بلوری را نسبت به HDPE کاهش می‌دهد.</p>
+    </div>
+  </div>
+
+  <!-- ============ خواص حرارتی ============ -->
+  <div class="section-title"><span class="dot" style="background:var(--c-thermal)"></span>🔥 خواص حرارتی</div>
+  <div class="card" data-cat="thermal">
+    <button class="card-head"><span class="htxt">🌡️ دماهای کلیدی</span><span class="chev">▾</span></button>
+    <div class="card-body">
+      <div class="stats">
+        <div class="stat"><div class="k">دمای انتقال شیشه‌ای (Tg)</div><div class="v">≈ منفی ۱۱۰ °C</div></div>
+        <div class="stat"><div class="k">دمای ذوب (Tm)</div><div class="v">۱۰۵–۱۱۵ °C</div></div>
+        <div class="stat"><div class="k">آنتالپی ذوب</div><div class="v">۱۲۰–۱۸۰ J/g</div></div>
+        <div class="stat"><div class="k">دمای تخریب حرارتی</div><div class="v">۳۰۰–۳۵۰ °C</div></div>
+        <div class="stat"><div class="k">HDT</div><div class="v">۴۵–۷۰ °C</div></div>
+        <div class="stat"><div class="k">دمای نرم‌شدگی ویکات</div><div class="v">۸۵–۹۵ °C</div></div>
+        <div class="stat"><div class="k">هدایت حرارتی</div><div class="v">۰.۳۳–۰.۴۰ W/m·K</div></div>
+        <div class="stat"><div class="k">ضریب انبساط حرارتی</div><div class="v">۱۵۰–۲۰۰ μ/°C</div></div>
+      </div>
+      <p>Tg بسیار پایین LDPE (حدود منفی ۱۱۰ درجه) نشان‌دهنده انعطاف‌پذیری فوق‌العاده این پلیمر در دماهای پایین است.</p>
+    </div>
+  </div>
+
+  <!-- ============ QUIZ (mid-page) ============ -->
+  <div class="quiz">
+    <h3>🧠 آزمون سریع دانش</h3>
+    <div id="quizBox"></div>
+    <div class="qscore" id="qscore"></div>
+  </div>
+
+  <!-- ============ خواص مکانیکی ============ -->
+  <div class="section-title"><span class="dot" style="background:var(--c-mech)"></span>⚙️ خواص مکانیکی</div>
+  <div class="card" data-cat="mech">
+    <button class="card-head"><span class="htxt">💪 استحکام و انعطاف‌پذیری</span><span class="chev">▾</span></button>
+    <div class="card-body">
+      <div class="stats">
+        <div class="stat"><div class="k">استحکام کششی</div><div class="v">۸–۱۵ MPa</div></div>
+        <div class="stat"><div class="k">مدول یانگ</div><div class="v">۰.۱۵–۰.۳۵ GPa</div></div>
+        <div class="stat"><div class="k">ازدیاد طول در شکست</div><div class="v">۱۰۰–۶۵۰٪</div></div>
+        <div class="stat"><div class="k">مدول خمشی</div><div class="v">۰.۲–۰.۴ GPa</div></div>
+        <div class="stat"><div class="k">سختی Shore D</div><div class="v">۴۰–۵۰</div></div>
+        <div class="stat"><div class="k">مقاومت ضربه‌ای</div><div class="v" style="font-size:.82rem;">بالا حتی در سرما</div></div>
+      </div>
+      <p>ازدیاد طول در نقطه شکست بسیار بالا (تا ۶۵۰٪) نشان‌دهنده نرمی و شکل‌پذیری عالی LDPE است. با این حال رفتار خزشی (Creep) آن در بارگذاری طولانی‌مدت قابل توجه است و باید در طراحی قطعات مدنظر قرار گیرد.</p>
+    </div>
+  </div>
+
+  <!-- ============ خواص فیزیکی ============ -->
+  <div class="section-title"><span class="dot" style="background:var(--c-phys)"></span>📦 خواص فیزیکی</div>
+  <div class="card" data-cat="phys">
+    <button class="card-head"><span class="htxt">💧 چگالی، جذب آب و نفوذپذیری</span><span class="chev">▾</span></button>
+    <div class="card-body">
+      <div class="stats">
+        <div class="stat"><div class="k">چگالی</div><div class="v">۰.۹۱۰–۰.۹۲۵ g/cm³</div></div>
+        <div class="stat"><div class="k">جذب آب (۲۴h)</div><div class="v">کمتر از ۰.۰۱٪</div></div>
+        <div class="stat"><div class="k">ضریب شکست نور</div><div class="v">≈۱.۵۱</div></div>
+        <div class="stat"><div class="k">ظاهر</div><div class="v" style="font-size:.85rem;">نیمه‌شفاف</div></div>
+        <div class="stat"><div class="k">نفوذپذیری اکسیژن</div><div class="v" style="font-size:.78rem;">۴۰۰–۶۰۰ cc·mm/m²·day·atm</div></div>
+        <div class="stat"><div class="k">نفوذپذیری CO₂</div><div class="v" style="font-size:.78rem;">۱۵۰۰–۲۰۰۰ (همان واحد)</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ مقاومت شیمیایی ============ -->
+  <div class="section-title"><span class="dot" style="background:var(--c-chem)"></span>⚗️ مقاومت شیمیایی</div>
+  <div class="card open" data-cat="chem">
+    <div class="card-body" style="max-height:none;opacity:1;padding:0 18px 18px;">
+      <div class="grid2">
+        <div class="res-row">اسیدها و بازها <span class="badge b-excellent">عالی</span></div>
+        <div class="res-row">الکل‌ها <span class="badge b-excellent">خیلی خوب</span></div>
+        <div class="res-row">هیدروکربن‌های آلیفاتیک <span class="badge b-good">خوب (تورم جزئی)</span></div>
+        <div class="res-row">هیدروکربن‌های آروماتیک <span class="badge b-poor">ضعیف</span></div>
+        <div class="res-row">حلال‌های هالوژنه <span class="badge b-poor">ضعیف</span></div>
+        <div class="res-row">مقاومت ESCR <span class="badge b-good">خوب</span></div>
+        <div class="res-row">مقاومت در برابر UV <span class="badge b-poor">ضعیف (نیاز به پایدارکننده)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ رئولوژی ============ -->
+  <div class="section-title"><span class="dot" style="background:var(--c-process)"></span>⚙️ رئولوژی و فرآیندپذیری</div>
+  <div class="card" data-cat="process">
+    <button class="card-head"><span class="htxt">🌀 جریان مذاب</span><span class="chev">▾</span></button>
+    <div class="card-body">
+      <div class="stats">
+        <div class="stat"><div class="k">MFI (۱۹۰°C / ۲.۱۶kg)</div><div class="v">۰.۲–۲۰ g/10min</div></div>
+        <div class="stat"><div class="k">ضریب توان (n)</div><div class="v">۰.۳–۰.۵</div></div>
+        <div class="stat"><div class="k">ویسکوزیته برش صفر</div><div class="v" style="font-size:.78rem;">۱۰⁴–۱۰⁶ Pa·s</div></div>
+        <div class="stat"><div class="k">رفتار ویسکوزیته</div><div class="v" style="font-size:.82rem;">شبه‌پلاستیک</div></div>
+      </div>
+      <p>رفتار ویسکوزیته مذاب از نوع شبه‌پلاستیک (Shear-Thinning) است: با افزایش نرخ برش، ویسکوزیته کاهش می‌یابد. استحکام مذاب بالا (ناشی از شاخه‌های بلند) LDPE را برای فیلم دمشی ایده‌آل می‌سازد.</p>
+    </div>
+  </div>
+
+  <!-- ============ فرآیند تولید ============ -->
+  <div class="section-title"><span class="dot" style="background:var(--c-process)"></span>🏭 روش‌های فرآیند و تولید قطعه</div>
+  <div class="card" data-cat="process">
+    <button class="card-head"><span class="htxt">🛠️ دما و روش‌های شکل‌دهی</span><span class="chev">▾</span></button>
+    <div class="card-body">
+      <div class="stats">
+        <div class="stat"><div class="k">دمای فرآیند</div><div class="v">۱۸۰–۲۳۰ °C</div></div>
+        <div class="stat"><div class="k">نسبت دمش (BUR)</div><div class="v">۲:۱ تا ۴:۱</div></div>
+      </div>
+      <p>روش‌های رایج: <b>فیلم دمشی</b> (کیسه و بسته‌بندی)، <b>اکستروژن پوششی</b> (پوشش کاغذ و کارتن)، <b>قالب‌گیری تزریقی</b> (قطعات صنعتی و درب بطری)، <b>قالب‌گیری دورانی</b> (مخازن بزرگ و اسباب‌بازی) و <b>پوشش سیم و کابل</b> برای عایق‌کاری الکتریکی.</p>
+    </div>
+  </div>
+
+  <!-- ============ خواص الکتریکی ============ -->
+  <div class="section-title"><span class="dot" style="background:var(--c-elec)"></span>🔌 خواص الکتریکی</div>
+  <div class="card" data-cat="elec">
+    <button class="card-head"><span class="htxt">⚡ عایق‌کاری</span><span class="chev">▾</span></button>
+    <div class="card-body">
+      <div class="stats">
+        <div class="stat"><div class="k">ثابت دی‌الکتریک</div><div class="v">۲.۲۵–۲.۳۵</div></div>
+        <div class="stat"><div class="k">استقامت دی‌الکتریک</div><div class="v">۲۰–۳۰ kV/mm</div></div>
+        <div class="stat"><div class="k">مقاومت حجمی</div><div class="v" style="font-size:.78rem;">۱۰¹⁶–۱۰¹⁸ Ω·cm</div></div>
+        <div class="stat"><div class="k">ضریب تلفات دی‌الکتریک</div><div class="v">≈۰.۰۰۰۲</div></div>
+      </div>
+      <p>این ضریب تلفات بسیار پایین، LDPE را به یکی از بهترین مواد برای عایق‌کاری سیم و کابل تبدیل کرده است.</p>
+    </div>
+  </div>
+
+  <!-- ============ فیزیک پیشرفته ============ -->
+  <div class="section-title"><span class="dot" style="background:var(--c-adv)"></span>🔬 فیزیک پیشرفته پلیمر</div>
+  <div class="card" data-cat="adv">
+    <button class="card-head"><span class="htxt">🧮 پارامترهای حلالیت و زنجیر</span><span class="chev">▾</span></button>
+    <div class="card-body">
+      <div class="stats">
+        <div class="stat"><div class="k">پارامتر حلالیت</div><div class="v">۱۶–۱۷ (MPa)½</div></div>
+        <div class="stat"><div class="k">هانسن δD</div><div class="v">≈۱۶</div></div>
+        <div class="stat"><div class="k">هانسن δP و δH</div><div class="v">≈۰</div></div>
+        <div class="stat"><div class="k">کسر حجم آزاد (FFV)</div><div class="v">۰.۱۶–۰.۲۰</div></div>
+        <div class="stat"><div class="k">طول پایداری زنجیر</div><div class="v">≈۰.۷ nm</div></div>
+        <div class="stat"><div class="k">پارامتر فلوری-هاگینز (χ)</div><div class="v">۰.۱–۰.۳</div></div>
+      </div>
+      <p>δP و δH نزدیک به صفر نشان‌دهنده ماهیت کاملاً غیرقطبی LDPE است؛ به همین دلیل برهم‌کنش خوبی با هیدروکربن‌های آلیفاتیک و برهم‌کنش ضعیفی با حلال‌های قطبی دارد.</p>
+    </div>
+  </div>
+
+  <!-- ============ پایداری محیطی ============ -->
+  <div class="section-title"><span class="dot" style="background:var(--c-env)"></span>♻️ پایداری محیطی</div>
+  <div class="card" data-cat="env">
+    <button class="card-head"><span class="htxt">🌍 بازیافت و ردپای کربنی</span><span class="chev">▾</span></button>
+    <div class="card-body">
+      <div class="stats">
+        <div class="stat"><div class="k">کد بازیافت</div><div class="v">۴</div></div>
+        <div class="stat"><div class="k">ارزش انرژی</div><div class="v">≈۴۶ MJ/kg</div></div>
+        <div class="stat"><div class="k">ردپای کربنی (فسیلی)</div><div class="v" style="font-size:.8rem;">۱.۸–۲.۵ kg CO₂/kg</div></div>
+        <div class="stat"><div class="k">ردپای کربنی (زیست‌پایه)</div><div class="v" style="font-size:.8rem;">۰.۵–۱.۰ kg CO₂/kg</div></div>
+      </div>
+      <p>LDPE قابلیت تولید از منابع زیست‌پایه را نیز دارد؛ از اتیلن زیستی حاصل از نیشکر می‌توان LDPE زیست‌پایه تولید کرد که ردپای کربنی به‌مراتب کمتری دارد.</p>
+    </div>
+  </div>
+
+  <!-- ============ کاربردها ============ -->
+  <div class="section-title"><span class="dot" style="background:var(--c-app)"></span>🏭 کاربردها</div>
+  <div class="card open" data-cat="app">
+    <div class="card-body" style="max-height:none;opacity:1;padding:0 18px 18px;">
+      <div class="app-grid">
+        <div class="app-card"><span class="ic">🛍️</span><div class="t">فیلم بسته‌بندی، کیسه، شرینک و استرچ</div></div>
+        <div class="app-card"><span class="ic">🔌</span><div class="t">عایق سیم و کابل</div></div>
+        <div class="app-card"><span class="ic">🌾</span><div class="t">فیلم گلخانه‌ای و مالچ کشاورزی</div></div>
+        <div class="app-card"><span class="ic">🍯</span><div class="t">بطری‌های قابل‌فشردن (سس و عسل)</div></div>
+        <div class="app-card"><span class="ic">📦</span><div class="t">پوشش کاغذ و کارتن در برابر رطوبت</div></div>
+      </div>
+      <p style="margin-top:14px;">تنوع این کاربردها بازتاب ویژگی‌های منحصربه‌فرد LDPE است: انعطاف‌پذیری بالا، عایق‌بودن، مقاومت شیمیایی عالی و قیمت مناسب.</p>
+    </div>
+  </div>
+
+  <footer>📚 دایرةالمعارف پلیمرها — پلی‌اتیلن با چگالی پایین (LDPE)</footer>
+</div>
+
+<script>
+// ---------- helpers ----------
+const faDigits = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+function toFa(n){
+  return String(n).replace(/[0-9]/g, d => faDigits[d]).replace('.', '٫');
+}
+
+// ---------- accordion ----------
+document.querySelectorAll('.card-head').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    btn.closest('.card').classList.toggle('open');
+  });
+});
+
+// ---------- hero chain animation ----------
+(function(){
+  const svg = document.getElementById('chainCanvas');
+  const ns = "http://www.w3.org/2000/svg";
+  const W=500,H=120,midY=60;
+  const backbone = document.createElementNS(ns,'path');
+  let d = `M 10 ${midY}`;
+  for(let x=10;x<=490;x+=20){
+    d += ` L ${x} ${midY + (Math.sin(x/28)*6)}`;
+  }
+  backbone.setAttribute('d', d);
+  backbone.setAttribute('stroke', '#7fb069');
+  backbone.setAttribute('stroke-width', '3');
+  backbone.setAttribute('fill', 'none');
+  backbone.setAttribute('stroke-linecap','round');
+  svg.appendChild(backbone);
+
+  const branchSpots = [40,80,110,150,190,220,260,300,330,370,410,440,470];
+  branchSpots.forEach((x,i)=>{
+    const up = i%2===0;
+    const len = (i%5===0)?26:14; // occasional long branch
+    const y0 = midY + Math.sin(x/28)*6;
+    const y1 = up ? y0-len : y0+len;
+    const line = document.createElementNS(ns,'line');
+    line.setAttribute('x1',x);line.setAttribute('y1',y0);
+    line.setAttribute('x2',x + (up?6:-6));line.setAttribute('y2',y1);
+    line.setAttribute('stroke', len>20 ? '#ffb648' : '#7aa7ff');
+    line.setAttribute('stroke-width','2.4');
+    line.setAttribute('stroke-linecap','round');
+    line.style.opacity='0';
+    line.style.transition = `opacity .6s ease ${0.4 + i*0.08}s`;
+    svg.appendChild(line);
+    requestAnimationFrame(()=>{ setTimeout(()=>{line.style.opacity='0.95';}, 30); });
+  });
+})();
+
+// ---------- structure/density simulator ----------
+const slider = document.getElementById('densitySlider');
+const branchSvg = document.getElementById('branchSvg');
+const outDensity = document.getElementById('outDensity');
+const outCryst = document.getElementById('outCryst');
+const outBranch = document.getElementById('outBranch');
+const nsB = "http://www.w3.org/2000/svg";
+
+function renderBranchSvg(branchCount){
+  branchSvg.innerHTML='';
+  const W=500,H=90,midY=45;
+  const path = document.createElementNS(nsB,'path');
+  let d = `M 10 ${midY}`;
+  for(let x=10;x<=490;x+=16){ d+= ` L ${x} ${midY}`; }
+  path.setAttribute('d',d);
+  path.setAttribute('stroke','#8fd694');
+  path.setAttribute('stroke-width','3');
+  path.setAttribute('fill','none');
+  path.setAttribute('stroke-linecap','round');
+  branchSvg.appendChild(path);
+
+  const spacing = 480 / branchCount;
+  for(let i=0;i<branchCount;i++){
+    const x = 12 + i*spacing;
+    const up = i%2===0;
+    const len = (i%6===0)?22:11;
+    const line = document.createElementNS(nsB,'line');
+    line.setAttribute('x1',x);line.setAttribute('y1',midY);
+    line.setAttribute('x2', x + (up?5:-5));
+    line.setAttribute('y2', up ? midY-len : midY+len);
+    line.setAttribute('stroke', len>18 ? '#ffb648' : '#7aa7ff');
+    line.setAttribute('stroke-width','2.2');
+    line.setAttribute('stroke-linecap','round');
+    branchSvg.appendChild(line);
+  }
+}
+
+function updateSim(){
+  const raw = parseInt(slider.value,10); // 910-925
+  const density = raw/1000;
+  const t = (raw-910)/(925-910); // 0..1
+  const cryst = 40 + t*15;          // 40% at .910 -> 55% at .925
+  const branch = Math.round(40 - t*20); // 40 at .910 -> 20 at .925
+
+  outDensity.textContent = toFa(density.toFixed(3));
+  outCryst.textContent = '٪' + toFa(Math.round(cryst));
+  outBranch.textContent = toFa(branch);
+  renderBranchSvg(branch);
+}
+slider.addEventListener('input', updateSim);
+updateSim();
+
+// ---------- quiz ----------
+const quizData = [
+  {
+    q: 'LDPE اولین‌بار توسط کدام شرکت و در چه سالی به روش صنعتی تولید شد؟',
+    opts: ['۱۹۳۳ — ICI بریتانیا','۱۹۵۳ — BASF آلمان','۱۹۶۵ — Dow آمریکا','۱۹۲۰ — DuPont آمریکا'],
+    correct: 0,
+    fb: 'درست طبق متن: LDPE اولین بار در سال ۱۹۳۳ توسط ICI بریتانیا تولید شد.'
+  },
+  {
+    q: 'کد بازیافت LDPE کدام است؟',
+    opts:['۱','۲','۴','۷'],
+    correct:2,
+    fb:'LDPE با کد بازیافت ۴ شناسایی می‌شود.'
+  },
+  {
+    q: 'مقاومت LDPE در برابر کدام گروه از مواد ضعیف است؟',
+    opts:['اسیدها و بازها','الکل‌ها','هیدروکربن‌های آروماتیک و حلال‌های هالوژنه','هیدروکربن‌های آلیفاتیک'],
+    correct:2,
+    fb:'طبق متن، LDPE در برابر هیدروکربن‌های آروماتیک و حلال‌های هالوژنه مقاومت ضعیفی دارد.'
+  }
+];
+
+let score = 0;
+const quizBox = document.getElementById('quizBox');
+const qscore = document.getElementById('qscore');
+
+quizData.forEach((item, qi)=>{
+  const wrap = document.createElement('div');
+  wrap.className='qitem';
+  const qt = document.createElement('div');
+  qt.className='qtext';
+  qt.textContent = (qi+1)+'. '+item.q;
+  wrap.appendChild(qt);
+
+  const opts = document.createElement('div');
+  opts.className='opts';
+  const fb = document.createElement('div');
+  fb.className='qfeedback';
+
+  item.opts.forEach((optText, oi)=>{
+    const b = document.createElement('button');
+    b.className='opt';
+    b.textContent = optText;
+    b.addEventListener('click', ()=>{
+      const allOpts = opts.querySelectorAll('.opt');
+      allOpts.forEach(o=>o.disabled=true);
+      if(oi===item.correct){
+        b.classList.add('correct');
+        score++;
+      } else {
+        b.classList.add('wrong');
+        allOpts[item.correct].classList.add('correct');
+      }
+      fb.textContent = item.fb;
+      qscore.textContent = 'امتیاز: ' + toFa(score) + ' از ' + toFa(quizData.length);
+    });
+    opts.appendChild(b);
+  });
+
+  wrap.appendChild(opts);
+  wrap.appendChild(fb);
+  quizBox.appendChild(wrap);
+});
+qscore.textContent = 'امتیاز: ' + toFa(0) + ' از ' + toFa(quizData.length);
+</script>
+</body>
+</html>
