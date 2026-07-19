@@ -1,25 +1,227 @@
 <!DOCTYPE html>
-<html lang="en">
+<html dir="rtl" lang="fa">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Polymer Grades Reference</title>
+    <title>دایرةالمعارف پلیمرها | مرجع گریدها</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        body { font-family: system-ui, -apple-system, sans-serif; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 2rem; color: #333; }
-        h1 { border-bottom: 2px solid #3498db; padding-bottom: 0.5rem; }
-        .grade-list { list-style: none; padding: 0; }
-        .grade-list li { margin: 1rem 0; padding: 1rem; border: 1px solid #eee; border-radius: 8px; transition: box-shadow 0.2s; }
-        .grade-list li:hover { box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .grade-list a { text-decoration: none; color: #2c3e50; font-weight: 600; font-size: 1.1rem; display: block; }
-        .grade-list a:hover { color: #3498db; }
+        :root {
+            --primary: #3498db;
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text: #2c3e50;
+            --border: #e2e8f0;
+            --hover-bg: #f1f5f9;
+        }
+        
+        body { 
+            font-family: 'Vazirmatn', system-ui, -apple-system, sans-serif; 
+            line-height: 1.6; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 2rem; 
+            background-color: var(--bg);
+            color: var(--text); 
+        }
+        
+        .container {
+            background: var(--surface);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+        }
+        
+        h1 { 
+            border-bottom: 3px solid var(--primary); 
+            padding-bottom: 0.75rem; 
+            font-weight: 800;
+            margin-top: 0;
+            color: #1e293b;
+        }
+        
+        p.subtitle {
+            color: #64748b;
+            margin-bottom: 2rem;
+            font-size: 1.05rem;
+        }
+        
+        /* Accordion Styles */
+        .polymer-family {
+            margin-bottom: 1rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            background: var(--surface);
+        }
+        
+        .accordion-btn {
+            background-color: transparent;
+            color: var(--text);
+            cursor: pointer;
+            padding: 1.25rem 1.5rem;
+            width: 100%;
+            text-align: right;
+            border: none;
+            outline: none;
+            transition: background-color 0.2s ease;
+            font-family: inherit;
+            font-weight: 800;
+            font-size: 1.15rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .accordion-btn:hover, .accordion-btn.active {
+            background-color: var(--hover-bg);
+        }
+        
+        .accordion-btn::after {
+            content: '\002B'; /* Plus sign */
+            color: var(--primary);
+            font-size: 1.8rem;
+            font-weight: 400;
+            transition: transform 0.3s ease;
+            line-height: 1;
+        }
+        
+        .accordion-btn.active::after {
+            content: '\2212'; /* Minus sign */
+            transform: rotate(180deg);
+        }
+        
+        .panel {
+            padding: 0 1.5rem;
+            background-color: var(--surface);
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease;
+        }
+        
+        .accordion-btn.active + .panel {
+            padding-bottom: 1rem; /* Add padding only when open */
+        }
+        
+        .grade-list { 
+            list-style: none; 
+            padding: 0; 
+            margin: 0.5rem 0 0 0;
+            border-top: 1px dashed var(--border);
+            padding-top: 1rem;
+        }
+        
+        .grade-list li { 
+            margin: 0.5rem 0; 
+        }
+        
+        .grade-list a { 
+            text-decoration: none; 
+            color: var(--text); 
+            font-weight: 600; 
+            display: block; 
+            padding: 0.8rem 1rem;
+            border-radius: 8px;
+            background: var(--bg);
+            border: 1px solid transparent;
+            transition: all 0.2s ease; 
+        }
+        
+        .grade-list a:hover { 
+            color: var(--primary); 
+            border-color: var(--primary);
+            background: #eff6ff;
+            transform: translateX(-4px);
+        }
+        
+        .grade-list a.disabled {
+            color: #94a3b8;
+            background: transparent;
+            border-color: transparent;
+            cursor: default;
+        }
+        .grade-list a.disabled:hover {
+            transform: none;
+        }
+        
     </style>
 </head>
 <body>
-    <h1>Polymer Grades Reference</h1>
-    <p>Select a polymer grade below to view detailed material specifications.</p>
-    
-    <ul class="grade-list">
-        <li><a href="/ldpe.html">Low-Density Polyethylene (LDPE)</a></li>
-        </ul>
+    <div class="container">
+        <h1>مرجع گریدها و خانواده پلیمرها</h1>
+        <p class="subtitle">برای مشاهده مشخصات دقیق مهندسی، آکادمیک و صنعتی، خانواده پلیمری مورد نظر را باز کرده و گرید مربوطه را انتخاب کنید.</p>
+        
+        <!-- Family 1: Polyethylenes -->
+        <div class="polymer-family">
+            <button class="accordion-btn">خانواده پلی‌اتیلن‌ها (PE)</button>
+            <div class="panel">
+                <ul class="grade-list">
+                    <li><a href="LDPE_Encyclopedia_V4.html">پلی‌اتیلن با چگالی پایین (LDPE)</a></li>
+                    <!-- Future PE grades can be added here -->
+                    <li><a href="#" class="disabled">پلی‌اتیلن با چگالی بالا (HDPE) - به زودی</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Family 2: Coating Resins -->
+        <div class="polymer-family">
+            <button class="accordion-btn">رزین‌های پوششی و رنگ (Coating Resins)</button>
+            <div class="panel">
+                <ul class="grade-list">
+                    <li><a href="#" class="disabled">پلی‌اورتان‌ها (PU) - به زودی</a></li>
+                    <li><a href="#" class="disabled">رزین‌های اپوکسی - به زودی</a></li>
+                    <li><a href="#" class="disabled">رزین‌های اکریلیک - به زودی</a></li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Family 3: Polypropylenes -->
+        <div class="polymer-family">
+            <button class="accordion-btn">خانواده پلی‌پروپیلن‌ها (PP)</button>
+            <div class="panel">
+                <ul class="grade-list">
+                    <li><a href="#" class="disabled">هوموپلیمرها (Homo-PP) - به زودی</a></li>
+                    <li><a href="#" class="disabled">کوپلیمرها (Co-PP) - به زودی</a></li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var acc = document.getElementsByClassName("accordion-btn");
+            
+            // Open the first accordion by default
+            if(acc.length > 0) {
+                acc[0].classList.add("active");
+                var firstPanel = acc[0].nextElementSibling;
+                firstPanel.style.maxHeight = firstPanel.scrollHeight + 20 + "px"; // +20 for padding
+            }
+
+            for (var i = 0; i < acc.length; i++) {
+                acc[i].addEventListener("click", function() {
+                    // Optional: Close other open panels to keep it clean
+                    /*
+                    for (var j = 0; j < acc.length; j++) {
+                        if (acc[j] !== this && acc[j].classList.contains("active")) {
+                            acc[j].classList.remove("active");
+                            acc[j].nextElementSibling.style.maxHeight = null;
+                        }
+                    }
+                    */
+
+                    this.classList.toggle("active");
+                    var panel = this.nextElementSibling;
+                    if (panel.style.maxHeight) {
+                        panel.style.maxHeight = null;
+                    } else {
+                        panel.style.maxHeight = panel.scrollHeight + 20 + "px";
+                    } 
+                });
+            }
+        });
+    </script>
 </body>
 </html>
