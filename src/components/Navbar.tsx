@@ -44,36 +44,6 @@ export const Navbar: React.FC<NavbarProps> = ({
         </button>
       </div>
 
-      {/* Quick Polymer Switcher Pills */}
-      <div className="hidden lg:flex items-center gap-1.5 bg-[var(--panel-strong)] border border-[var(--line)] p-1 rounded-full text-xs">
-        <button
-          onClick={onGoToCatalog}
-          className={`px-3.5 py-1.5 rounded-full font-bold transition-all cursor-pointer ${
-            selectedPolymerId === null
-              ? 'bg-blue-600 text-white shadow-sm'
-              : 'text-[var(--ink-dim)] hover:text-[var(--ink)]'
-          }`}
-        >
-          🌐 فهرست گریدها
-        </button>
-        {polymers.map((p) => {
-          const isActive = selectedPolymerId === p.id;
-          return (
-            <button
-              key={p.id}
-              onClick={() => onSelectPolymer(p.id)}
-              className={`px-3 py-1.5 rounded-full font-bold transition-all en-mono cursor-pointer ${
-                isActive
-                  ? 'bg-blue-600 text-white shadow-sm font-extrabold'
-                  : 'text-[var(--ink-dim)] hover:text-[var(--ink)]'
-              }`}
-            >
-              {p.code}
-            </button>
-          );
-        })}
-      </div>
-
       {/* Right Controls */}
       <div className="flex items-center gap-2 sm:gap-3">
         <button

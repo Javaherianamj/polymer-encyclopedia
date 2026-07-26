@@ -16,9 +16,20 @@ import { CatalogPage } from './components/CatalogPage';
 import { CompareModal } from './components/CompareModal';
 import { ResourcesModal } from './components/ResourcesModal';
 import { ScrollToTop } from './components/ScrollToTop';
+import { ProcessingWindowSimulator } from './components/ProcessingWindowSimulator';
+import { AlloyingSimulator } from './components/AlloyingSimulator';
+import { LCACircularEconomy } from './components/LCACircularEconomy';
 
 export default function App() {
-  const [selectedPolymerId, setSelectedPolymerId] = useState<string | null>('ldpe');
+  // Hash routing helper
+  const getPolymerFromHash = (): string | null => {
+    const hash = window.location.hash.replace('#', '').toLowerCase();
+    if (!hash || hash === 'catalog' || hash === 'home') return null;
+    const exists = polymersData.some((p) => p.id === hash);
+    return exists ? hash : null;
+  };
+
+  const [selectedPolymerId, setSelectedPolymerId] = useState<string | null>(getPolymerFromHash);
   const [activeTab, setActiveTab] = useState<'ind' | 'eng' | 'aca'>('ind');
   const [isDark, setIsDark] = useState<boolean>(true);
   const [showCompare, setShowCompare] = useState<boolean>(false);
@@ -29,6 +40,26 @@ export default function App() {
     document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
   }, [isDark]);
 
+  // Sync window location hash with selected polymer & listen for browser navigation
+  useEffect(() => {
+    const handleHashChange = () => {
+      setSelectedPolymerId(getPolymerFromHash());
+    };
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  const handleSelectPolymer = (id: string | null) => {
+    setSelectedPolymerId(id);
+    if (id) {
+      window.location.hash = id;
+    } else {
+      window.location.hash = 'catalog';
+    }
+    setActiveTab('ind');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const activePolymer: PolymerData | undefined = polymersData.find((p) => p.id === selectedPolymerId);
 
   return (
@@ -37,12 +68,8 @@ export default function App() {
       <Navbar
         polymers={polymersData}
         selectedPolymerId={selectedPolymerId}
-        onSelectPolymer={(id) => {
-          setSelectedPolymerId(id);
-          setActiveTab('ind');
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        }}
-        onGoToCatalog={() => setSelectedPolymerId(null)}
+        onSelectPolymer={handleSelectPolymer}
+        onGoToCatalog={() => handleSelectPolymer(null)}
         onToggleCompare={() => setShowCompare(true)}
         onOpenResources={() => setShowResources(true)}
         isDark={isDark}
@@ -54,11 +81,7 @@ export default function App() {
         {selectedPolymerId === null || !activePolymer ? (
           <CatalogPage
             polymers={polymersData}
-            onSelectPolymer={(id) => {
-              setSelectedPolymerId(id);
-              setActiveTab('ind');
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
+            onSelectPolymer={handleSelectPolymer}
             onOpenResources={() => setShowResources(true)}
           />
         ) : (
@@ -239,6 +262,15 @@ export default function App() {
                     </div>
                   )}
                 </div>
+
+                {/* Processing Window Simulator */}
+                <ProcessingWindowSimulator polymer={activePolymer} />
+
+                {/* Alloying & Blending Simulator */}
+                <AlloyingSimulator polymer={activePolymer} />
+
+                {/* Life Cycle Assessment & Circular Economy */}
+                <LCACircularEconomy polymer={activePolymer} />
 
                 {/* Applications */}
                 <div className="bg-[var(--panel)] border border-[var(--line)] rounded-2xl p-6 shadow-sm">

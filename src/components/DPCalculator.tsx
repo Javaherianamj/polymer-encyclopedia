@@ -21,23 +21,26 @@ export const DPCalculator: React.FC<DPCalculatorProps> = ({ polymer }) => {
         درجه پلیمریزاسیون (<span className="en-mono font-bold text-blue-600 dark:text-blue-400">DP<sub>n</sub></span>) نشان‌دهنده میانگین تعداد واحدهای تکرارشونده در یک زنجیر پلیمری است و طبق رابطه ریاضی زیر محاسبه می‌شود:
       </p>
 
-      {/* Beautiful Visual Fraction Formula */}
-      <div className="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 p-5 rounded-2xl text-center my-4 shadow-inner">
-        <div className="flex items-center justify-center gap-3.5 text-xl font-extrabold text-slate-900 dark:text-white en-mono">
-          <div className="flex items-center text-blue-600 dark:text-blue-400 leading-none">
-            <span className="text-2xl font-black">DP</span>
-            <span className="text-xs font-bold text-blue-500 dark:text-blue-300 translate-y-1.5 -ml-0.5">n</span>
-          </div>
-          <span className="text-slate-500 dark:text-slate-400 font-bold text-xl leading-none">=</span>
-          <div className="inline-flex flex-col items-center justify-center min-w-[70px]">
-            <div className="px-3 py-0.5 text-blue-600 dark:text-blue-400 font-extrabold text-lg leading-none flex items-center">
-              M<span className="text-xs text-blue-500 dark:text-blue-300 translate-y-1">n</span>
-            </div>
-            <div className="w-full h-0.5 bg-slate-700 dark:bg-slate-300 my-1 rounded-full" />
-            <div className="px-3 py-0.5 text-emerald-600 dark:text-emerald-400 font-extrabold text-lg leading-none flex items-center">
-              M<span className="text-xs text-emerald-500 dark:text-emerald-300 translate-y-1">0</span>
-            </div>
-          </div>
+      {/* Standard Clean Mathematical Formula */}
+      <div className="bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-700/80 p-5 rounded-2xl text-center my-4 shadow-inner">
+        <div className="inline-flex items-center justify-center gap-3 text-slate-900 dark:text-white en-mono font-bold text-xl sm:text-2xl select-none dir-ltr">
+          {/* Left Side */}
+          <span className="text-blue-600 dark:text-blue-400">
+            DP<sub className="text-sm">n</sub>
+          </span>
+
+          {/* Equals */}
+          <span className="text-slate-400 dark:text-slate-500 font-normal px-1">=</span>
+
+          {/* Right Side Fraction */}
+          <span className="inline-flex flex-col items-center justify-center text-center align-middle">
+            <span className="border-b-2 border-slate-700 dark:border-slate-300 px-3 pb-0.5 text-blue-600 dark:text-blue-400 text-lg sm:text-xl font-black leading-none">
+              M<sub className="text-xs font-bold">n</sub>
+            </span>
+            <span className="px-3 pt-1 text-emerald-600 dark:text-emerald-400 text-lg sm:text-xl font-black leading-none">
+              M<sub className="text-xs font-bold">0</sub>
+            </span>
+          </span>
         </div>
 
         <div className="text-xs text-slate-500 dark:text-slate-400 mt-3 font-medium">
